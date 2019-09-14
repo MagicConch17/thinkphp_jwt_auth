@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+        <html lang="zh-CN">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+            <meta name="description" content="">
+            <meta name="author" content="">
+
+            <title>注册页面</title>
+
+            <!-- Bootstrap core CSS -->
+            <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+            <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+            <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+            <!--[if lt IE 9]>
+            <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+            <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+            <![endif]-->
+        </head>
+
+<body>
+
+<div class="container">
+
+    <h2 class="form-signin-heading">欢迎注册</h2>
+    <label for="inputName" class="sr-only">账号:</label>
+    <input type="text" id="inputName" class="form-control" placeholder="您的账号" required autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="您的密码" required>
+        <button class="btn btn-lg btn-primary btn-block" onclick="register()">注册</button>
+<!--    <button onclick="register()">注册</button>-->
+
+</div> <!-- /container -->
+
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    function register() {
+        console.log("start")
+        var names = $('#inputName').val();
+        console.log(names);
+        var passwords = $('#inputPassword').val();
+        console.log(passwords);
+        // 示例demo 不做验证校验等
+        var url = 'http://127.0.0.1:8000/register/user';
+        $.ajax({
+            type:'POST',
+            url:url,
+            data:{
+                name: names,
+                password: passwords
+            },
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
+            success:function(response){
+                console.log(response);
+                alert('注册成功');
+                $(location).prop('href', './login.html')
+            },
+            error:function(error){
+                console.log(error);
+                alert('网络链接错误');
+            }
+        });
+    }
+</script>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>登录页面</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2 class="form-signin-heading">欢迎登录</h2>
+    <label for="inputName" class="sr-only">账号:</label>
+    <input type="text" id="inputName" class="form-control" placeholder="您的账号" required autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="您的密码" required>
+    <label for="inputCode" class="sr-only">验证码</label>
+    <input type="text" id="inputCode" class="from-control" placeholder="输入验证码">
+    <input type="text" onclick="getCode(this)">
+    <button class="btn btn-lg btn-primary btn-block" onclick="login()">登录</button>
+
+</div> <!-- /container -->
+
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script>
+    code_key = '';
+    function login() {
+        console.log("start")
+        var names = $('#inputName').val();
+        console.log(names);
+        var passwords = $('#inputPassword').val();
+        console.log(passwords);
+        var code = $('#inputCode').val();
+        console.log(code);
+        // 示例demo 不做验证校验等
+        var url = 'http://localhost:8000/logins/user';
+        $.ajax({
+            type:'POST',
+            url:url,
+            data:{
+                name: names,
+                password: passwords,
+                key : code_key,
+                code: code,
+            },
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
+            success:function(response){
+                console.log(response);
+                Cookies.set('token',response.data.token);
+                alert("登录成功");
+                $(location).prop('href', './index.html')
+            },
+            error:function(){
+                alert('网络链接错误');
+            }
+        });
+    }
+    function getCode(obj) {
+        var url = 'http://localhost:8000/code'
+        $.get(url,function(result){
+            code_key = result.data.key;
+            var htmls = "<input type='text' id='inputCode' value='"+result.data.code+"' />";
+            console.log(htmls);
+            $('#inputCode').html(htmls);// 此处存在问题
+        });
+    }
+</script>
